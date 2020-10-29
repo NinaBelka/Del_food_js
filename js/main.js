@@ -20,6 +20,18 @@ const cartButton = document.querySelector('#cart-button'),
 
 let login = localStorage.getItem('gloDelivery');
 
+// запрос данных из базы
+const getData = async function (url) {
+  const response = await fetch(url);
+  if (!response.ok) {
+    throw new Error(`Ошибка по адресу ${url}, 
+    статус ошибка ${response.status}!`)
+  }
+  return response.json();
+};
+
+console.log(getData('./db/partners.json'));
+
 // валидация логина
 function validName(str) {
   const regName = /^[a-zA-Z][a-zA-Z0-9-_\.]{1,20}$/;
@@ -112,22 +124,22 @@ function checkAuth() {
 }
 
 // создание карточки ресторана
-function createCardRestaurant() {
+function createCardRestaurant({ image, kitchen, name, price, stars, products, time_of_delivery: timeOfDelivery }) {
   const card = `
-    <a class="card card-restaurant">
-      <img src="img/pizza-plus/preview.jpg" alt="image"
+    <a class="card card-restaurant" data-products="${products}">
+      <img src="${image}" alt="image"
         class="card-image" />
       <div class="card-text">
         <div class="card-heading">
-          <h3 class="card-title">Пицца плюс</h3>
-          <span class="card-tag tag">50 мин</span>
+          <h3 class="card-title">${name}</h3>
+          <span class="card-tag tag">${timeOfDelivery} мин</span>
         </div>
         <div class="card-info">
           <div class="rating">
-            4.5
+            ${stars}
           </div>
-          <div class="price">От 900 ₽</div>
-          <div class="category">Пицца</div>
+          <div class="price">От ${price} ₽</div>
+          <div class="category">${kitchen}</div>
         </div>
       </div>
     </a>
@@ -137,25 +149,24 @@ function createCardRestaurant() {
 }
 
 // создание карточки товара
-function createCardGood() {
+function createCardGood({ description, image, name, price }) {
   const card = document.createElement('div');
   card.className = 'card';
   card.insertAdjacentHTML('beforeend', `
-    <img src="img/pizza-plus/pizza-vesuvius.jpg" alt="image"  class="card-image" />
+    <img src="${image}" alt="${name}"  class="card-image" />
     <div class="card-text">
       <div class="card-heading">
-        <h3 class="card-title card-title-reg">Пицца Везувий</h3>
+        <h3 class="card-title card-title-reg">${name}</h3>
       </div>
       <div class="card-info">
-        <div class="ingredients">Соус томатный, сыр «Моцарелла», ветчина, пепперони, перец       «Халапенье», соус «Тобаско», томаты.
-        </div>
+        <div class="ingredients">${description}</div>
       </div>
       <div class="card-buttons">
         <button class="button button-primary button-add-cart">
           <span class="button-card-text">В корзину</span>
           <span class="button-cart-svg"></span>
         </button>
-        <strong class="card-price-bold">545 ₽</strong>
+        <strong class="card-price-bold">${price} ₽</strong>
       </div>
 		</div>
   `);
@@ -173,46 +184,52 @@ function openGoods(event) {
       containerPromo.classList.add('hide');
       restaurants.classList.add('hide');
       menu.classList.remove('hide');
-      createCardGood();
-      createCardGood();
-      createCardGood();
+      getData(`./db/${restaurant.dataset.products}`).then(function (data) {
+        data.forEach(createCardGood);
+      });
     }
   } else {
     toggleModalAuth();
   }
 }
 
-buttonAuth.addEventListener('click', clearForm);
+function init() {
 
-cartButton.addEventListener('click', toggleModal);
+  getData('./db/partners.json').then(function (data) {
+    data.forEach(createCardRestaurant)
+  });
 
-close.addEventListener('click', toggleModal);
+  buttonAuth.addEventListener('click', clearForm);
 
-cardsRestaurants.addEventListener('click', openGoods);
+  cartButton.addEventListener('click', toggleModal);
 
-logo.addEventListener('click', () => {
-  containerPromo.classList.remove('hide');
-  restaurants.classList.remove('hide');
-  menu.classList.add('hide');
-});
+  close.addEventListener('click', toggleModal);
 
-checkAuth();
-createCardRestaurant();
-createCardRestaurant();
-createCardRestaurant();
+  cardsRestaurants.addEventListener('click', openGoods);
 
-// slider
-new Swiper('.swiper-container', {
-  sliderPerView: 1,
-  loop: true,
-  autoplay: true,
-  grabCursor: true,
-  effect: 'cube',
-  cubeEffect: {
-    shadow: false,
-  },
-  pagination: {
-    el: '.swiper-pagination',
-    clickable: true,
-  },
-});
+  logo.addEventListener('click', () => {
+    containerPromo.classList.remove('hide');
+    restaurants.classList.remove('hide');
+    menu.classList.add('hide');
+  });
+
+  checkAuth();
+
+  // slider
+  new Swiper('.swiper-container', {
+    sliderPerView: 1,
+    loop: true,
+    autoplay: true,
+    grabCursor: true,
+    effect: 'cube',
+    cubeEffect: {
+      shadow: false,
+    },
+    pagination: {
+      el: '.swiper-pagination',
+      clickable: true,
+    },
+  });
+
+}
+init();
