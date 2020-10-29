@@ -105,10 +105,6 @@ function checkAuth() {
   }
 }
 
-buttonAuth.addEventListener('click', clearForm);
-
-checkAuth();
-
 // создание карточки ресторана
 function createCardRestaurant() {
   const card = `
@@ -133,9 +129,6 @@ function createCardRestaurant() {
 
   cardsRestaurants.insertAdjacentHTML('beforeend', card);
 }
-createCardRestaurant();
-createCardRestaurant();
-createCardRestaurant();
 
 // создание карточки товара
 function createCardGood() {
@@ -178,6 +171,8 @@ function openGoods(event) {
   }
 }
 
+buttonAuth.addEventListener('click', clearForm);
+
 cartButton.addEventListener('click', toggleModal);
 
 close.addEventListener('click', toggleModal);
@@ -189,3 +184,8 @@ logo.addEventListener('click', () => {
   restaurants.classList.remove('hide');
   menu.classList.add('hide');
 });
+
+checkAuth();
+createCardRestaurant();
+createCardRestaurant();
+createCardRestaurant();
