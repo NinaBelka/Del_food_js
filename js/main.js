@@ -20,6 +20,12 @@ const cartButton = document.querySelector('#cart-button'),
 
 let login = localStorage.getItem('gloDelivery');
 
+// валидация логина
+function validName(str) {
+  const regName = /^[a-zA-Z][a-zA-Z0-9-_\.]{1,20}$/;
+  return regName.test(str);
+}
+
 // открытие модального окна
 function toggleModal() {
   modal.classList.toggle('is-open');
@@ -69,7 +75,7 @@ function notAuthorized() {
   function logIn(event) {
     event.preventDefault();
 
-    if (loginInput.value.trim()) {
+    if (validName(loginInput.value)) {
       login = loginInput.value;
 
       localStorage.setItem('gloDelivery', login);
@@ -159,15 +165,20 @@ function createCardGood() {
 // открытие карточки ресторана
 function openGoods(event) {
   const target = event.target;
-  const restaurant = target.closest('.card-restaurant');
-  if (restaurant) {
-    cardsMenu.textContent = '';
-    containerPromo.classList.add('hide');
-    restaurants.classList.add('hide');
-    menu.classList.remove('hide');
-    createCardGood();
-    createCardGood();
-    createCardGood();
+
+  if (login) {
+    const restaurant = target.closest('.card-restaurant');
+    if (restaurant) {
+      cardsMenu.textContent = '';
+      containerPromo.classList.add('hide');
+      restaurants.classList.add('hide');
+      menu.classList.remove('hide');
+      createCardGood();
+      createCardGood();
+      createCardGood();
+    }
+  } else {
+    toggleModalAuth();
   }
 }
 
@@ -189,3 +200,19 @@ checkAuth();
 createCardRestaurant();
 createCardRestaurant();
 createCardRestaurant();
+
+// slider
+new Swiper('.swiper-container', {
+  sliderPerView: 1,
+  loop: true,
+  autoplay: true,
+  grabCursor: true,
+  effect: 'cube',
+  cubeEffect: {
+    shadow: false,
+  },
+  pagination: {
+    el: '.swiper-pagination',
+    clickable: true,
+  },
+});
