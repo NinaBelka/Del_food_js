@@ -820,4 +820,46 @@ button {
   .footer-link:not(:last-child) {
     margin-right: 0;
   }
+
+  .modal-dialog {
+    max-width: 320px;
+    padding: 10px;
+  }
+
+  .modal-body {
+    margin-bottom: 10px;
+  }
+
+  .label-auth {
+    margin: 20px;
+  }
+
+  .modal-header {
+    margin-bottom: 20px;
+  }
+
+  .food-name {
+    line-height: 18px;
+  }
+
+  .food-price {
+    margin-right: 20px;
+    line-height: 18px;
+  }
+
+  .modal-footer {
+    flex-wrap: wrap;
+  }
+
+  .modal-pricetag {
+    width: 100%;
+    margin-bottom: 10px;
+    text-align: center;
+  }
+
+  .counter-button {
+    width: 28px;
+    height: 24px;
+  }
+
 }
