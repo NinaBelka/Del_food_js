@@ -840,10 +840,12 @@ button {
 
   .food-name {
     line-height: 18px;
+    max-width: 130px;
   }
 
   .food-price {
     margin-right: 20px;
+    font-size: 16px;
     line-height: 18px;
   }
 
