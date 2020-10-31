@@ -8,7 +8,6 @@ let swiper = new Swiper('.swiper-container', {
   effect: 'coverflow',
 });
 
-
 // Получение элементов
 const cartButton = document.querySelector('#cart-button'),
   modal = document.querySelector('.modal'),
@@ -35,10 +34,16 @@ const cartButton = document.querySelector('#cart-button'),
   modalPrice = document.querySelector('.modal-pricetag'),
   buttonClearCart = document.querySelector('.clear-cart');
 
-// сохранение пароля авторизации
+// сохранение логина авторизации
 let login = localStorage.getItem('gloDelivery');
 
-// сохранение корзины
+// валидация логина авторизации
+function validName(str) {
+  const regName = /^[a-zA-Z][a-zA-Z0-9-_\.]{1,20}$/;
+  return regName.test(str);
+}
+
+// сохранение товаров в корзине
 const cart = JSON.parse(localStorage.getItem(`gloDelivery_${login}`)) || [];
 
 function saveCart() {
@@ -61,12 +66,6 @@ const getData = async function (url) {
   }
   return response.json();
 };
-
-// валидация логина
-function validName(str) {
-  const regName = /^[a-zA-Z][a-zA-Z0-9-_\.]{1,20}$/;
-  return regName.test(str);
-}
 
 // открытие модального окна
 function toggleModal() {
